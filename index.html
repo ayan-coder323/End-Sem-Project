@@ -89,9 +89,10 @@
   <nav>
     <h2>Edu ERP</h2>
     <ul>
-      <li class="active" onclick="showSection('students')">👩‍🎓 Students</li>
-      <li onclick="showSection('courses')">📘 Courses</li>
-      <li onclick="showSection('grades')">🧮 Grades</li>
+<li class="active" onclick="showSection('students', event)">👩‍🎓 Students</li>
+<li onclick="showSection('courses', event)">📘 Courses</li>
+<li onclick="showSection('grades', event)">🧮 Grades</li>
+
     </ul>
   </nav>
 
@@ -215,12 +216,12 @@
 
   <script>
     // Navigation handler (static)
-    function showSection(sectionId) {
-      document.querySelectorAll("section").forEach(s => s.style.display = "none");
-      document.querySelectorAll("nav li").forEach(li => li.classList.remove("active"));
-      document.getElementById(sectionId).style.display = "block";
-      event.target.classList.add("active");
-    }
+  function showSection(sectionId, event) {
+    document.querySelectorAll("section").forEach(s => s.style.display = "none");
+    document.querySelectorAll("nav li").forEach(li => li.classList.remove("active"));
+    document.getElementById(sectionId).style.display = "block";
+    event.target.classList.add("active");
+  }
   </script>
 </body>
 </html>
