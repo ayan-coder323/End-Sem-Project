@@ -512,48 +512,43 @@
     function escapeHtml(s=''){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
     /* ---------- CRUD: Students ---------- */
-function openModal(kind, payload){
-  document.getElementById('modalBackdrop').style.display = 'flex';
-  document.getElementById('modalBackdrop').setAttribute('aria-hidden','false');
-  document.querySelectorAll('#modalContent form').forEach(f=>f.style.display='none');
+    function openModal(kind, payload){
+      document.getElementById('modalBackdrop').style.display = 'flex';
+      document.getElementById('modalBackdrop').setAttribute('aria-hidden','false');
+      document.querySelectorAll('#modalContent form').forEach(f=>f.style.display='none');
 
-  if(kind === 'student'){
-    document.getElementById('modalTitle').textContent = payload ? 'Edit Student' : 'Add Student';
-    document.getElementById('studentForm').style.display = 'block';
-    document.getElementById('studentName').value = payload ? payload.name : '';
-    document.getElementById('studentEmail').value = payload ? payload.email : '';
-    document.getElementById('studentId').value = payload ? payload.id : '';
-  } 
-  else if(kind === 'course'){
-    document.getElementById('modalTitle').textContent = payload ? 'Edit Course' : 'Add Course';
-    document.getElementById('courseForm').style.display = 'block';
-    document.getElementById('courseName').value = payload ? payload.name : '';
-    document.getElementById('courseCode').value = payload ? payload.code : '';
-    document.getElementById('courseId').value = payload ? payload.id : '';
-  } 
-  else if(kind === 'grade'){
-    document.getElementById('modalTitle').textContent = payload ? 'Edit Grade' : 'Add Grade';
-    const studentSelect = document.getElementById('gradeStudent');
-    const courseSelect  = document.getElementById('gradeCourse');
-    
-    // ✅ FIXED TEMPLATE STRING SYNTAX
-    studentSelect.innerHTML = `
-      <option value="">Select Student</option>
-      ${students.map(s => `<option value="${s.id}">${escapeHtml(s.name)}</option>`).join('')}
-    `;
-    courseSelect.innerHTML = `
-      <option value="">Select Course</option>
-      ${courses.map(c => `<option value="${c.id}">${escapeHtml(c.name)}</option>`).join('')}
-    `;
+      if(kind === 'student'){
+        document.getElementById('modalTitle').textContent = payload ? 'Edit Student' : 'Add Student';
+        document.getElementById('studentForm').style.display = 'block';
+        document.getElementById('studentName').value = payload ? payload.name : '';
+        document.getElementById('studentEmail').value = payload ? payload.email : '';
+        document.getElementById('studentId').value = payload ? payload.id : '';
+      } else if(kind === 'course'){
+        document.getElementById('modalTitle').textContent = payload ? 'Edit Course' : 'Add Course';
+        document.getElementById('courseForm').style.display = 'block';
+        document.getElementById('courseName').value = payload ? payload.name : '';
+        document.getElementById('courseCode').value = payload ? payload.code : '';
+        document.getElementById('courseId').value = payload ? payload.id : '';
+      } else if(kind === 'grade'){
+        document.getElementById('modalTitle').textContent = payload ? 'Edit Grade' : 'Add Grade';
+        const studentSelect = document.getElementById('gradeStudent');
+        const courseSelect  = document.getElementById('gradeCourse');
+studentSelect.innerHTML = `
+  <option value="">Select Student</option>
+  ${students.map(s => `<option value="${s.id}">${escapeHtml(s.name)}</option>`).join('')}
+`;
+courseSelect.innerHTML = `
+  <option value="">Select Course</option>
+  ${courses.map(c => `<option value="${c.id}">${escapeHtml(c.name)}</option>`).join('')}
+`;
 
-    document.getElementById('gradeForm').style.display = 'block';
-    document.getElementById('gradeValue').value = payload ? payload.grade : '';
-    document.getElementById('gradeStudent').value = payload ? payload.studentId : '';
-    document.getElementById('gradeCourse').value = payload ? payload.courseId : '';
-    document.getElementById('gradeId').value = payload ? payload.id : '';
-  }
-}
-
+        document.getElementById('gradeForm').style.display = 'block';
+        document.getElementById('gradeValue').value = payload ? payload.grade : '';
+        document.getElementById('gradeStudent').value = payload ? payload.studentId : '';
+        document.getElementById('gradeCourse').value = payload ? payload.courseId : '';
+        document.getElementById('gradeId').value = payload ? payload.id : '';
+      }
+    }
     function closeModal(){ document.getElementById('modalBackdrop').style.display = 'none'; document.getElementById('modalBackdrop').setAttribute('aria-hidden','true'); }
 
     function saveStudent(e){
