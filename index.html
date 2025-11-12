@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Educational ERP (Static UI with Add/Edit/Delete)</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding:0; font-family: "Segoe UI", sans-serif; }
+
+    body { display: flex; min-height: 100vh; background: #f4f6f8; }
+
+    /* Sidebar */
+    nav {
+      width: 220px;
+      background: #2d3e50;
+      color: white;
+      padding: 20px;
+    }
+    nav h2 { font-size: 20px; margin-bottom: 20px; text-align: center; }
+    nav ul { list-style: none; }
+    nav li {
+      padding: 10px;
+      margin: 8px 0;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: 0.3s;
+    }
+    nav li:hover, nav li.active { background: #1abc9c; }
+
+    /* Main area */
+    main {
+      flex: 1;
+      padding: 20px;
+    }
+
+    h1 { margin-bottom: 20px; }
+    .form-section, .data-section {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    input, select {
+      padding: 8px;
+      margin: 8px 0;
+      width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      background: #1abc9c;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover { background: #16a085; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      text-align: left;
+      padding: 10px;
+    }
+    th { background: #f0f0f0; }
+
+    .action-btn {
+      background: #e74c3c;
+      padding: 5px 10px;
+      border-radius: 4px;
+      color: white;
+      cursor: pointer;
+      border: none;
+      font-size: 14px;
+    }
+    .action-btn.edit { background: #3498db; margin-right: 5px; }
+  </style>
+</head>
+<body>
+  <nav>
+    <h2>Edu ERP</h2>
+    <ul>
+      <li class="active" onclick="showSection('students')">👩‍🎓 Students</li>
+      <li onclick="showSection('courses')">📘 Courses</li>
+      <li onclick="showSection('grades')">🧮 Grades</li>
+    </ul>
+  </nav>
+
+  <main>
+    <!-- Students Section -->
+    <section id="students">
+      <h1>Student Management</h1>
+      <div class="form-section">
+        <h3>Add / Edit Student</h3>
+        <input type="text" placeholder="Student Name">
+        <input type="text" placeholder="Student Email">
+        <button onclick="alert('This button does not perform any action.')">Save Student</button>
+      </div>
+
+      <div class="data-section">
+        <h3>Student List</h3>
+        <table>
+          <thead>
+            <tr><th>ID</th><th>Name</th><th>Email</th><th>Actions</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td><td>Aarav Sharma</td><td>aarav@example.com</td>
+              <td>
+                <button class="action-btn edit" onclick="alert('Edit feature is disabled.')">Edit</button>
+                <button class="action-btn" onclick="alert('Delete feature is disabled.')">Delete</button>
+              </td>
+            </tr>
+            <tr>
+              <td>2</td><td>Isha Patel</td><td>isha@example.com</td>
+              <td>
+                <button class="action-btn edit" onclick="alert('Edit feature is disabled.')">Edit</button>
+                <button class="action-btn" onclick="alert('Delete feature is disabled.')">Delete</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Courses Section -->
+    <section id="courses" style="display:none;">
+      <h1>Course Management</h1>
+      <div class="form-section">
+        <h3>Add / Edit Course</h3>
+        <input type="text" placeholder="Course Name">
+        <input type="text" placeholder="Course Code">
+        <button onclick="alert('This button does not perform any action.')">Save Course</button>
+      </div>
+      <div class="data-section">
+        <h3>Course List</h3>
+        <table>
+          <thead>
+            <tr><th>ID</th><th>Name</th><th>Code</th><th>Actions</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td><td>Mathematics</td><td>MTH101</td>
+              <td>
+                <button class="action-btn edit" onclick="alert('Edit feature is disabled.')">Edit</button>
+                <button class="action-btn" onclick="alert('Delete feature is disabled.')">Delete</button>
+              </td>
+            </tr>
+            <tr>
+              <td>2</td><td>Physics</td><td>PHY102</td>
+              <td>
+                <button class="action-btn edit" onclick="alert('Edit feature is disabled.')">Edit</button>
+                <button class="action-btn" onclick="alert('Delete feature is disabled.')">Delete</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Grades Section -->
+    <section id="grades" style="display:none;">
+      <h1>Grade Management</h1>
+      <div class="form-section">
+        <h3>Add / Edit Grade</h3>
+        <select>
+          <option value="">Select Student</option>
+          <option>Aarav Sharma</option>
+          <option>Isha Patel</option>
+        </select>
+        <select>
+          <option value="">Select Course</option>
+          <option>Mathematics</option>
+          <option>Physics</option>
+        </select>
+        <input type="text" placeholder="Grade (A+, B, etc.)">
+        <button onclick="alert('This button does not perform any action.')">Save Grade</button>
+      </div>
+
+      <div class="data-section">
+        <h3>Grade Records</h3>
+        <table>
+          <thead>
+            <tr><th>ID</th><th>Student</th><th>Course</th><th>Grade</th><th>Actions</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td><td>Aarav Sharma</td><td>Mathematics</td><td>A</td>
+              <td>
+                <button class="action-btn edit" onclick="alert('Edit feature is disabled.')">Edit</button>
+                <button class="action-btn" onclick="alert('Delete feature is disabled.')">Delete</button>
+              </td>
+            </tr>
+            <tr>
+              <td>2</td><td>Isha Patel</td><td>Physics</td><td>B+</td>
+              <td>
+                <button class="action-btn edit" onclick="alert('Edit feature is disabled.')">Edit</button>
+                <button class="action-btn" onclick="alert('Delete feature is disabled.')">Delete</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Navigation handler (static)
+    function showSection(sectionId) {
+      document.querySelectorAll("section").forEach(s => s.style.display = "none");
+      document.querySelectorAll("nav li").forEach(li => li.classList.remove("active"));
+      document.getElementById(sectionId).style.display = "block";
+      event.target.classList.add("active");
+    }
+  </script>
+</body>
+</html>
