@@ -1,649 +1,570 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Edu ERP — Login & Dashboard</title>
 
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
+  <!-- Fonts -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Merriweather:wght@400;700&display=swap"
+    rel="stylesheet">
 
   <style>
-    :root{
-      --bg: #0f1720;
-      --card: rgba(255,255,255,0.03);
-      --muted: rgba(255,255,255,0.75);
-      --accent: #6ee7b7;
-      --accent-2: #60a5fa;
+    /* ================= THEMES ================= */
+    :root {
+      --bg: #0b1220;
+      --card: rgba(255, 255, 255, 0.08);
+      --muted: rgba(255, 255, 255, 0.88);
+      --accent: #22d3ee;
+      --accent-2: #6366f1;
       --danger: #fb7185;
-      --glass: rgba(255,255,255,0.03);
-      --glass-2: rgba(255,255,255,0.02);
-      --shadow: 0 6px 20px rgba(2,6,23,0.7);
-      --radius: 12px;
-      --transition: 300ms cubic-bezier(.2,.9,.2,1);
+      --glass: rgba(255, 255, 255, 0.15);
+      --glass-2: rgba(255, 255, 255, 0.06);
+      --shadow: 0 30px 80px rgba(0, 0, 0, 0.85);
+      --radius: 16px;
+      --transition: 350ms cubic-bezier(.2, .9, .2, 1);
     }
-    :root[data-theme="light"]{
-      --bg: #f5f7fb;
+
+    :root[data-theme="light"] {
+      --bg: #f4f7fc;
       --card: #ffffff;
-      --muted: rgba(20,24,28,0.8);
-      --accent: #10b981;
-      --accent-2: #2563eb;
-      --danger: #ef4444;
-      --glass: rgba(10,12,18,0.03);
-      --glass-2: rgba(10,12,18,0.02);
-      --shadow: 0 8px 30px rgba(12,18,28,0.06);
+      --muted: rgba(20, 25, 40, 0.85);
+      --accent: #2563eb;
+      --accent-2: #10b981;
+      --glass: rgba(0, 0, 0, 0.06);
+      --glass-2: rgba(0, 0, 0, 0.03);
+      --shadow: 0 20px 40px rgba(20, 30, 60, 0.1);
     }
 
-    *{ box-sizing:border-box; }
-    html,body{ height:100%; }
-    body{
-      margin:0;
-      font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent), var(--bg);
-      color:var(--muted);
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
+    :root[data-theme="ocean"] {
+      --bg: #071c21;
+      --card: rgba(15, 45, 55, 0.7);
+      --muted: #d9fdff;
+      --accent: #2dd4bf;
+      --accent-2: #38bdf8;
+    }
+
+    :root[data-theme="sunset"] {
+      --bg: #1a0f1a;
+      --card: rgba(60, 20, 50, 0.7);
+      --muted: #ffe4e6;
+      --accent: #fb7185;
+      --accent-2: #f59e0b;
+    }
+
+    /* ================= BASE ================= */
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Inter", system-ui;
+      background:
+        radial-gradient(1200px 600px at 10% -10%, rgba(99, 102, 241, .35), transparent),
+        radial-gradient(1000px 500px at 90% 10%, rgba(34, 211, 238, .35), transparent),
+        var(--bg);
+      color: var(--muted);
+      display: flex;
+      gap: 20px;
+      padding: 24px;
       transition: background var(--transition), color var(--transition);
-      display:flex;
-      min-height:100vh;
-      gap:18px;
-      padding:24px;
     }
 
-    /* ---------- Full app layout ---------- */
-    nav.sidebar{
-      width:260px;
-      border-radius:16px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      padding:18px;
+    /* ================= SIDEBAR ================= */
+    nav.sidebar {
+      width: 260px;
+      padding: 18px;
+      border-radius: var(--radius);
+      background: var(--card);
       box-shadow: var(--shadow);
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-      flex-shrink:0;
-      overflow:hidden;
+      display: flex;
+      flex-direction: column;
+      backdrop-filter: blur(14px);
     }
-    .brand{ display:flex; gap:12px; align-items:center; padding-bottom:6px; border-bottom:1px solid var(--glass-2); }
-    .logo{ width:44px;height:44px;border-radius:10px; background:linear-gradient(135deg,var(--accent),var(--accent-2)); display:flex;align-items:center;justify-content:center; color:white;font-weight:800;font-size:18px; box-shadow:0 6px 18px rgba(10,10,10,0.15), inset 0 -6px 12px rgba(255,255,255,0.06); }
-    .brand h2{ font-size:16px;margin:0;color:var(--muted); }
-    .nav-list{ list-style:none;padding:0;margin:12px 0 0 0; display:flex; flex-direction:column; gap:6px; }
-    .nav-list li{ display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px; cursor:pointer;color:var(--muted); user-select:none; transition: background var(--transition), transform var(--transition), color var(--transition), box-shadow var(--transition); }
-    .nav-list li:hover{ transform: translateX(6px); background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); color:white; }
-    .nav-list li.active{ background: linear-gradient(90deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)); color:white; box-shadow: 0 6px 18px rgba(0,0,0,0.25); transform:none; }
-    .sidebar-footer{ margin-top:auto; display:flex; gap:8px; align-items:center; justify-content:space-between; }
-    .theme-toggle{ background:transparent;border:1px solid var(--glass-2); padding:6px 10px;border-radius:10px; cursor:pointer; display:flex;gap:8px;align-items:center;color:var(--muted); }
-    .btn{ padding:10px 14px; border-radius:10px; border:0; cursor:pointer; font-weight:600; transition: transform var(--transition), box-shadow var(--transition); }
-    .btn.primary{ background: linear-gradient(90deg,var(--accent),var(--accent-2)); color:white; }
-    .btn.ghost{ background:transparent;border:1px solid var(--glass-2); color:var(--muted); }
 
-    main{ flex:1; display:flex; flex-direction:column; gap:18px; min-width:0; }
-
-    header.topbar{ display:flex; align-items:center; justify-content:space-between; gap:12px; }
-    .search{ flex:1; display:flex; gap:12px; align-items:center; background:var(--card); padding:10px 14px;border-radius:12px; box-shadow: var(--shadow); border: 1px solid var(--glass-2); }
-    .search input{ border:0;background:transparent;outline:none;color:var(--muted);font-size:14px; }
-
-    .kpis{ display:flex;gap:12px;align-items:center; }
-    .kpi{ background: linear-gradient(180deg, rgba(255,255,255,0.01), transparent); padding:10px 14px;border-radius:12px; min-width:120px; box-shadow: var(--shadow); border:1px solid var(--glass-2); }
-    .kpi h4{ margin:0;font-size:12px;color:var(--muted); font-weight:600; }
-    .kpi p{ margin:6px 0 0 0;font-size:18px;color:white;font-weight:700; }
-
-    .card{ background:var(--card); border-radius:var(--radius); padding:18px; box-shadow: var(--shadow); border:1px solid var(--glass); transition: transform var(--transition), box-shadow var(--transition); overflow:hidden; }
-    .card:hover{ transform: translateY(-6px); }
-    h1.title{ font-family: "Merriweather", serif; font-weight:700; margin:0 0 8px 0; color:var(--muted); font-size:20px; }
-    p.lead{ margin:0 0 16px 0; color:var(--muted); opacity:0.9 }
-
-    .row{ display:flex; gap:18px; align-items:flex-start; }
-    .col{ flex:1; min-width:0; }
-
-    table{ width:100%; border-collapse:collapse; font-size:14px; }
-    thead th{ text-align:left; padding:12px; color:var(--muted); font-weight:700; font-size:13px; border-bottom:1px solid var(--glass-2); }
-    tbody td{ padding:12px; border-bottom:1px dashed var(--glass-2); color:var(--muted); vertical-align:middle; }
-    .chip{ padding:6px 10px; border-radius:999px; background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); display:inline-block; font-weight:600; color:var(--muted); }
-    .actions{ display:flex; gap:8px; }
-    .action{ padding:6px 10px;border-radius:8px;border:0;cursor:pointer;font-weight:600;font-size:13px; background:transparent;border:1px solid var(--glass-2); }
-    .action.edit{ color:var(--accent-2); } .action.delete{ color:var(--danger); }
-
-    .modal-backdrop{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:1000; background: linear-gradient(180deg, rgba(2,6,23,0.6), rgba(2,6,23,0.6)); transition: opacity var(--transition), visibility var(--transition); }
-    .modal{ width:720px; max-width:95%; border-radius:14px; padding:18px; background:var(--card); box-shadow: 0 18px 80px rgba(2,6,23,0.6); border:1px solid var(--glass); }
-    .close-x{ background:transparent;border:0;color:var(--muted); font-weight:700; cursor:pointer; }
-
-    /* ---------- Login screen ---------- */
-    .login-screen{
-      position:fixed; inset:0; display:flex; align-items:center; justify-content:center; z-index:2000;
-      background: linear-gradient(180deg, rgba(2,6,23,0.8), rgba(2,6,23,0.9));
-      backdrop-filter: blur(4px);
+    .brand {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      border-bottom: 1px solid var(--glass-2);
+      padding-bottom: 10px;
     }
-    .login-card{
-      width:420px; max-width:95%;
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      border-radius:16px; padding:28px; box-shadow: 0 30px 80px rgba(2,6,23,0.7); border:1px solid var(--glass);
-      display:flex; flex-direction:column; gap:14px; color:var(--muted);
-      transform: translateY(8px); animation:pop 450ms cubic-bezier(.2,.9,.2,1) both;
+
+    .logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
     }
-    @keyframes pop{ from{ opacity:0; transform: translateY(18px) scale(.98) } to{ opacity:1; transform: translateY(0) scale(1) } }
-    .login-brand{ display:flex; gap:12px; align-items:center; }
-    .login-brand .logo{ width:48px;height:48px;border-radius:12px; display:flex;align-items:center;justify-content:center; color:white;font-weight:800;font-size:18px; }
-    .login-title{ font-size:20px; margin:0; font-weight:700; color:white; }
-    .login-sub{ margin:0; font-size:13px; opacity:0.9; color:var(--muted); }
 
-    .login-form{ display:flex; flex-direction:column; gap:10px; }
-    .login-form input{ padding:12px 14px; border-radius:10px; border:1px solid var(--glass-2); background:transparent; color:var(--muted); outline:none; font-size:14px; }
-    .login-actions{ display:flex; justify-content:space-between; align-items:center; gap:12px; }
-    .small{ font-size:13px; opacity:0.9; color:var(--muted); }
+    .nav-list {
+      list-style: none;
+      padding: 0;
+      margin-top: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
 
-    .hint{ font-size:12px; color:var(--muted); opacity:0.9; background:transparent; padding:6px 8px; border-radius:8px; border:1px dashed var(--glass-2); }
+    .nav-list li {
+      padding: 10px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
 
-    /* responsive */
-    @media (max-width:980px){
-      nav.sidebar{ display:none; }
-      body{ padding:12px; }
-      .row{ flex-direction:column; }
+    .nav-list li:hover,
+    .nav-list li.active {
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      color: white;
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    /* ================= MAIN ================= */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      border: 1px solid var(--glass);
+    }
+
+    h1 {
+      font-family: "Merriweather", serif;
+      font-size: 22px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 12px;
+      border-bottom: 1px solid var(--glass-2);
+    }
+
+    /* ================= BUTTONS ================= */
+    .btn {
+      padding: 10px 14px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all var(--transition);
+    }
+
+    .btn.primary {
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      color: white;
+    }
+
+    .btn.primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, .4);
+    }
+
+    .btn.ghost {
+      background: transparent;
+      border: 1px solid var(--glass-2);
+      color: var(--muted);
+    }
+
+    /* ================= LOGIN ================= */
+    .login-screen {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .75);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      backdrop-filter: blur(6px);
+    }
+
+    .login-card {
+      width: 420px;
+      padding: 30px;
+      border-radius: 20px;
+      background: linear-gradient(160deg, rgba(255, 255, 255, .12), rgba(255, 255, 255, .04));
+      box-shadow: 0 40px 100px rgba(0, 0, 0, .8);
+      color: var(--muted);
+    }
+
+    .login-form input {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, .06);
+      border: 1px solid var(--glass-2);
+      color: var(--muted);
+    }
+
+    .login-form input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, .3);
+    }
+
+    /* ================= RESPONSIVE ================= */
+    @media (max-width: 900px) {
+      nav.sidebar {
+        display: none;
+      }
+
+      body {
+        padding: 14px;
+      }
     }
   </style>
 </head>
-<body data-theme="dark">
 
-  <!-- LOGIN SCREEN (shown initially if not logged in) -->
-  <div id="loginScreen" class="login-screen" aria-hidden="false" style="display:none">
-    <div class="login-card" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
-      <div class="login-brand">
-        <div class="logo">ED</div>
-        <div>
-          <h3 id="loginTitle" class="login-title">Welcome to Edu ERP</h3>
-          <p class="login-sub">Sign in to continue to your dashboard</p>
-        </div>
-      </div>
+<body>
 
-      <form id="loginForm" class="login-form" onsubmit="handleLogin(event)">
-        <input id="loginEmail" type="email" placeholder="Email (demo: demo@edu.test)" required />
-        <input id="loginPassword" type="password" placeholder="Password (demo: demo)" required />
-        <div style="display:flex; gap:10px; align-items:center; justify-content:space-between;">
-          <div class="small hint">Use <strong>demo@edu.test</strong> / <strong>demo</strong> to try quickly — or any non-empty credentials.</div>
-          <button class="btn primary" type="submit">Sign in</button>
-        </div>
+  <!-- LOGIN -->
+  <div id="loginScreen" class="login-screen">
+    <div class="login-card">
+      <h2>Edu ERP Login</h2>
+      <p>demo@edu.test / demo</p>
+      <form class="login-form" onsubmit="handleLogin(event)">
+        <input id="loginEmail" placeholder="Email" required>
+        <input id="loginPassword" type="password" placeholder="Password" required>
+        <button class="btn primary" style="width:100%;margin-top:14px">Sign In</button>
       </form>
-
-      <div style="display:flex; justify-content:space-between; margin-top:6px; gap:8px;">
-        <button class="btn ghost" onclick="fillDemo()">Fill demo</button>
-        <button class="btn ghost" onclick="toggleTheme()">Toggle theme</button>
-      </div>
     </div>
   </div>
 
   <!-- SIDEBAR -->
-  <nav class="sidebar fade-in-up" aria-label="Main navigation">
+  <nav class="sidebar">
     <div class="brand">
       <div class="logo">ED</div>
-      <div>
-        <h2>Edu ERP</h2>
-        <p>Front-end prototype</p>
-      </div>
+      <strong>Our ERP</strong>
     </div>
 
-    <ul class="nav-list" role="tablist" aria-label="sections">
-      <li class="active" data-target="students" role="tab" onclick="navigateSection(event)">
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM2 20c0-3.31 5.37-5 10-5s10 1.69 10 5v2H2v-2z" fill="currentColor"/></svg>
-        Students
-      </li>
-      <li data-target="courses" role="tab" onclick="navigateSection(event)">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M3 6l9-4 9 4-9 4-9-4zM3 10l9 4 9-4M3 14l9 4 9-4" fill="currentColor"/></svg>
-        Courses
-      </li>
-      <li data-target="grades" role="tab" onclick="navigateSection(event)">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7l3-7z" fill="currentColor"/></svg>
-        Grades
-      </li>
+    <ul class="nav-list">
+      <li class="active" data-section="students" onclick="switchSection(this)">Students</li>
+      <li data-section="courses" onclick="switchSection(this)">Courses</li>
+      <li data-section="grades" onclick="switchSection(this)">Grades</li>
     </ul>
 
-    <div class="sidebar-footer">
-      <button class="theme-toggle" id="themeBtn" title="Toggle theme" onclick="toggleTheme()">
-        <svg id="themeIcon" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 3a1 1 0 0 1 1 1v1a1 1 0 1 1-2 0V4a1 1 0 0 1 1-1zM4.22 5.47a1 1 0 0 1 1.42 0l.71.71a1 1 0 1 1-1.42 1.42l-.71-.71a1 1 0 0 1 0-1.42zM3 12a1 1 0 0 1 1-1h1a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1zM5.64 18.36a1 1 0 0 1 1.42 0l.71.71a1 1 0 0 1-1.42 1.42l-.71-.71a1 1 0 0 1 0-1.42zM12 19a1 1 0 0 1 1 1v1a1 1 0 1 1-2 0v-1a1 1 0 0 1 1-1zM18.36 18.36a1 1 0 0 1 1.42 0 1 1 0 0 1 0 1.42l-.71.71a1 1 0 1 1-1.42-1.42l.71-.71zM20 12a1 1 0 0 1 1-1h1a1 1 0 1 1 0 2h-1a1 1 0 0 1-1-1zM18.36 5.64a1 1 0 0 1 0 1.42l-.71.71a1 1 0 0 1-1.42-1.42l.71-.71a1 1 0 0 1 1.42 0z"/></svg>
-        <span class="sm-hide">Theme</span>
-      </button>
 
-      <div style="display:flex; gap:8px;">
-        <button class="btn ghost" onclick="openModal('student')">+ New</button>
-        <button class="btn ghost" id="logoutBtn" onclick="handleLogout()">Logout</button>
-      </div>
+    <div class="sidebar-footer">
+      <button class="btn ghost" onclick="toggleTheme()">Theme</button>
+      <button class="btn ghost" onclick="logout()">Logout</button>
     </div>
   </nav>
 
   <!-- MAIN -->
   <main>
-    <header class="topbar">
-      <div class="search card">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <input id="globalSearch" placeholder="Search students, courses, grades..." oninput="applySearch(this.value)" />
-      </div>
-
-      <div class="kpis">
-        <div class="kpi card">
-          <h4>Students</h4>
-          <p id="kpiStudents">—</p>
-        </div>
-        <div class="kpi card">
-          <h4>Courses</h4>
-          <p id="kpiCourses">—</p>
-        </div>
-        <div class="kpi card">
-          <h4>Grades</h4>
-          <p id="kpiGrades">—</p>
-        </div>
-      </div>
-    </header>
 
     <!-- STUDENTS -->
-    <section id="students" class="card fade-in-up">
-      <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:14px">
-        <div>
-          <h1 class="title">Student Management</h1>
-          <p class="lead">Add, edit or remove students. Changes persist locally in your browser.</p>
-        </div>
-        <div style="display:flex; gap:8px;">
-          <button class="btn ghost" onclick="openModal('student')">+ Add Student</button>
-        </div>
-      </div>
+    <section id="students" class="card section">
+      <h1>Student Management</h1>
 
-      <div>
-        <table id="studentsTable" class="fade-in-up" aria-describedby="Student List">
-          <thead>
-            <tr><th style="width:60px">ID</th><th>Name</th><th>Email</th><th style="width:180px">Actions</th></tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
+      <form onsubmit="addStudent(event)">
+        <input id="studentName" placeholder="Student Name" required>
+        <input id="studentEmail" placeholder="Student Email" required>
+        <button class="btn primary">Add Student</button>
+      </form>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="studentsTable"></tbody>
+      </table>
     </section>
 
     <!-- COURSES -->
-    <section id="courses" class="card fade-in-up" style="display:none">
-      <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:14px">
-        <div>
-          <h1 class="title">Course Management</h1>
-          <p class="lead">Manage course catalog.</p>
-        </div>
-        <div style="display:flex; gap:8px;">
-          <button class="btn ghost" onclick="openModal('course')">+ Add Course</button>
-        </div>
-      </div>
+    <section id="courses" class="card section" style="display:none">
+      <h1>Course Management</h1>
 
-      <div>
-        <table id="coursesTable" class="fade-in-up">
-          <thead>
-            <tr><th style="width:60px">ID</th><th>Name</th><th>Code</th><th style="width:180px">Actions</th></tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
+      <form onsubmit="addCourse(event)">
+        <input id="courseName" placeholder="Course Name" required>
+        <input id="courseCode" placeholder="Course Code" required>
+        <button class="btn primary">Add Course</button>
+      </form>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Code</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="coursesTable"></tbody>
+      </table>
     </section>
 
     <!-- GRADES -->
-    <section id="grades" class="card fade-in-up" style="display:none">
-      <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:14px">
-        <div>
-          <h1 class="title">Grade Management</h1>
-          <p class="lead">Assign grades to students for specific courses.</p>
-        </div>
-        <div style="display:flex; gap:8px;">
-          <button class="btn ghost" onclick="openModal('grade')">+ Add Grade</button>
-        </div>
-      </div>
+    <section id="grades" class="card section" style="display:none">
+      <h1>Grade Management</h1>
 
-      <div>
-        <table id="gradesTable" class="fade-in-up">
-          <thead>
-            <tr><th style="width:60px">ID</th><th>Student</th><th>Course</th><th>Grade</th><th style="width:180px">Actions</th></tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
+      <form onsubmit="addGrade(event)">
+        <select id="gradeStudent" required></select>
+        <select id="gradeCourse" required></select>
+        <input id="gradeValue" placeholder="Grade (A/B/C)" required>
+        <button class="btn primary">Assign Grade</button>
+      </form>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Student</th>
+            <th>Course</th>
+            <th>Grade</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="gradesTable"></tbody>
+      </table>
     </section>
+
   </main>
-
-  <!-- MODAL -->
-  <div id="modalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true">
-    <div class="modal" role="document">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-        <h3 id="modalTitle">Add</h3>
-        <button class="close-x" onclick="closeModal()">✕</button>
-      </div>
-
-      <div id="modalContent">
-        <!-- Student form -->
-        <form id="studentForm" style="display:none" onsubmit="saveStudent(event)">
-          <div class="modal-row">
-            <input id="studentName" placeholder="Full name" required />
-            <input id="studentEmail" placeholder="Email address" type="email" required />
-          </div>
-          <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:8px">
-            <button type="button" class="btn ghost" onclick="closeModal()">Cancel</button>
-            <button type="submit" class="btn primary">Save Student</button>
-          </div>
-          <input type="hidden" id="studentId" />
-        </form>
-
-        <!-- Course form -->
-        <form id="courseForm" style="display:none" onsubmit="saveCourse(event)">
-          <div class="modal-row">
-            <input id="courseName" placeholder="Course name" required />
-            <input id="courseCode" placeholder="Course code (e.g. MTH101)" required />
-          </div>
-          <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:8px">
-            <button type="button" class="btn ghost" onclick="closeModal()">Cancel</button>
-            <button type="submit" class="btn primary">Save Course</button>
-          </div>
-          <input type="hidden" id="courseId" />
-        </form>
-
-        <!-- Grade form -->
-        <form id="gradeForm" style="display:none" onsubmit="saveGrade(event)">
-          <div class="modal-row">
-            <select id="gradeStudent" required></select>
-            <select id="gradeCourse" required></select>
-            <input id="gradeValue" placeholder="Grade (A+, B, etc.)" required />
-          </div>
-          <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:8px">
-            <button type="button" class="btn ghost" onclick="closeModal()">Cancel</button>
-            <button type="submit" class="btn primary">Save Grade</button>
-          </div>
-          <input type="hidden" id="gradeId" />
-        </form>
-      </div>
-    </div>
-  </div>
-
+  <!-- ================= SCRIPT ================= -->
   <script>
-    /* ---------- Simple Auth + State ---------- */
-    const AUTH_KEY = 'erp_logged_in_v1'; // stores boolean + user info
-    function isLoggedIn(){ return !!localStorage.getItem(AUTH_KEY); }
+    /* ================= DATA ================= */
+    let students = JSON.parse(localStorage.getItem("erp_students") || "[]");
+    let courses = JSON.parse(localStorage.getItem("erp_courses") || "[]");
+    let grades = JSON.parse(localStorage.getItem("erp_grades") || "[]");
 
-    function showLogin(show){
-      const login = document.getElementById('loginScreen');
-      if(show){
-        login.style.display = 'flex';
-        login.setAttribute('aria-hidden','false');
-      } else {
-        login.style.display = 'none';
-        login.setAttribute('aria-hidden','true');
-      }
+    function saveAll() {
+      localStorage.setItem("erp_students", JSON.stringify(students));
+      localStorage.setItem("erp_courses", JSON.stringify(courses));
+      localStorage.setItem("erp_grades", JSON.stringify(grades));
+      renderAll();
     }
 
-    function handleLogin(e){
+    /* ================= STUDENTS ================= */
+    function addStudent(e) {
       e.preventDefault();
-      const email = document.getElementById('loginEmail').value.trim();
-      const pass  = document.getElementById('loginPassword').value.trim();
-
-      // Demo logic:
-      // - If user inputs demo@edu.test/demo -> accepts.
-      // - If user inputs any non-empty values -> accepts.
-      // - If you want to enforce credentials, change logic here.
-      if(!email || !pass) return alert('Enter email and password.');
-      if(email === 'demo@edu.test' && pass === 'demo'){
-        localStorage.setItem(AUTH_KEY, JSON.stringify({ email, name: 'Demo User', ts: Date.now() }));
-        bootApp();
-      } else {
-        // allow any non-empty credentials as demo (optional security)
-        localStorage.setItem(AUTH_KEY, JSON.stringify({ email, name: email.split('@')[0] || 'User', ts: Date.now() }));
-        bootApp();
-      }
+      students.push({
+        id: Date.now(),
+        name: studentName.value,
+        email: studentEmail.value
+      });
+      e.target.reset();
+      saveAll();
     }
 
-    function handleLogout(){
-      if(!confirm('Log out?')) return;
-      localStorage.removeItem(AUTH_KEY);
-      // show login screen
-      showLogin(true);
-      // optionally clear sensitive UI state here
+    function deleteStudent(id) {
+      students = students.filter(s => s.id !== id);
+      grades = grades.filter(g => g.studentId !== id);
+      saveAll();
     }
 
-    function fillDemo(){
-      document.getElementById('loginEmail').value = 'demo@edu.test';
-      document.getElementById('loginPassword').value = 'demo';
+    function renderStudents() {
+      studentsTable.innerHTML = students.map(s => `
+      <tr>
+        <td>${s.name}</td>
+        <td>${s.email}</td>
+        <td><button class="btn ghost" onclick="deleteStudent(${s.id})">Delete</button></td>
+      </tr>
+    `).join("");
     }
 
-    /* ---------- Data (client-side, persisted to localStorage) ---------- */
-    const StorageKeys = { STUDENTS: 'erp_students_v1', COURSES: 'erp_courses_v1', GRADES: 'erp_grades_v1' };
-
-    let students = JSON.parse(localStorage.getItem(StorageKeys.STUDENTS) || '[]');
-    let courses  = JSON.parse(localStorage.getItem(StorageKeys.COURSES)  || '[]');
-    let grades   = JSON.parse(localStorage.getItem(StorageKeys.GRADES)   || '[]');
-
-    // seed if empty (nice demo)
-    if(students.length===0 && courses.length===0 && grades.length===0){
-      students = [
-        { id: 1, name: "Aarav Sharma", email: "aarav@example.com" },
-        { id: 2, name: "Isha Patel", email: "isha@example.com" }
-      ];
-      courses = [
-        { id: 1, name: "Mathematics", code: "MTH101" },
-        { id: 2, name: "Physics", code: "PHY102" }
-      ];
-      grades = [
-        { id: 1, studentId: 1, courseId: 1, grade: "A" },
-        { id: 2, studentId: 2, courseId: 2, grade: "B+" }
-      ];
-      persistAll();
+    /* ================= COURSES ================= */
+    function addCourse(e) {
+      e.preventDefault();
+      courses.push({
+        id: Date.now(),
+        name: courseName.value,
+        code: courseCode.value
+      });
+      e.target.reset();
+      saveAll();
     }
 
-    /* ---------- Utilities ---------- */
-    function persistAll(){
-      localStorage.setItem(StorageKeys.STUDENTS, JSON.stringify(students));
-      localStorage.setItem(StorageKeys.COURSES, JSON.stringify(courses));
-      localStorage.setItem(StorageKeys.GRADES, JSON.stringify(grades));
-      refreshAll();
+    function deleteCourse(id) {
+      courses = courses.filter(c => c.id !== id);
+      grades = grades.filter(g => g.courseId !== id);
+      saveAll();
     }
-    function uid(collection){ return collection.length ? Math.max(...collection.map(c=>c.id))+1 : 1; }
-    function findStudent(id){ return students.find(s=>s.id===Number(id)); }
-    function findCourse(id){ return courses.find(c=>c.id===Number(id)); }
 
-    /* ---------- Rendering ---------- */
-    function refreshAll(){
+    function renderCourses() {
+      coursesTable.innerHTML = courses.map(c => `
+      <tr>
+        <td>${c.name}</td>
+        <td>${c.code}</td>
+        <td><button class="btn ghost" onclick="deleteCourse(${c.id})">Delete</button></td>
+      </tr>
+    `).join("");
+    }
+
+    /* ================= GRADES ================= */
+    function addGrade(e) {
+      e.preventDefault();
+      grades.push({
+        id: Date.now(),
+        studentId: +gradeStudent.value,
+        courseId: +gradeCourse.value,
+        value: gradeValue.value
+      });
+      e.target.reset();
+      saveAll();
+    }
+
+    function deleteGrade(id) {
+      grades = grades.filter(g => g.id !== id);
+      saveAll();
+    }
+
+    function renderGrades() {
+      gradesTable.innerHTML = grades.map(g => {
+        const s = students.find(x => x.id === g.studentId);
+        const c = courses.find(x => x.id === g.courseId);
+        return `
+        <tr>
+          <td>${s?.name || "-"}</td>
+          <td>${c?.name || "-"}</td>
+          <td>${g.value}</td>
+          <td><button class="btn ghost" onclick="deleteGrade(${g.id})">Delete</button></td>
+        </tr>
+      `;
+      }).join("");
+    }
+
+    /* ================= DROPDOWNS ================= */
+    function renderDropdowns() {
+      gradeStudent.innerHTML = students.map(s =>
+        `<option value="${s.id}">${s.name}</option>`
+      ).join("");
+
+      gradeCourse.innerHTML = courses.map(c =>
+        `<option value="${c.id}">${c.name}</option>`
+      ).join("");
+    }
+
+    function renderAll() {
       renderStudents();
       renderCourses();
       renderGrades();
-      updateKPIs();
+      renderDropdowns();
     }
-    function updateKPIs(){
-      document.getElementById('kpiStudents').textContent = students.length;
-      document.getElementById('kpiCourses').textContent  = courses.length;
-      document.getElementById('kpiGrades').textContent   = grades.length;
-    }
-    function renderStudents(filter){
-      const tbody = document.querySelector('#studentsTable tbody');
-      tbody.innerHTML = '';
-      const rows = (filter ? students.filter(s => (s.name + s.email).toLowerCase().includes(filter.toLowerCase())) : students);
-      for(const s of rows){
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${s.id}</td>
-          <td>${escapeHtml(s.name)}</td>
-          <td>${escapeHtml(s.email)}</td>
-          <td class="actions">
-            <button class="action edit" onclick="editStudent(${s.id})">Edit</button>
-            <button class="action delete" onclick="deleteStudent(${s.id})">Delete</button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      }
-    }
-    function renderCourses(filter){
-      const tbody = document.querySelector('#coursesTable tbody');
-      tbody.innerHTML = '';
-      const rows = (filter ? courses.filter(c => (c.name + c.code).toLowerCase().includes(filter.toLowerCase())) : courses);
-      for(const c of rows){
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${c.id}</td>
-          <td>${escapeHtml(c.name)}</td>
-          <td>${escapeHtml(c.code)}</td>
-          <td class="actions">
-            <button class="action edit" onclick="editCourse(${c.id})">Edit</button>
-            <button class="action delete" onclick="deleteCourse(${c.id})">Delete</button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      }
-    }
-    function renderGrades(filter){
-      const tbody = document.querySelector('#gradesTable tbody');
-      tbody.innerHTML = '';
-      const rows = (filter ? grades.filter(g => {
-        const s = findStudent(g.studentId) || {};
-        const c = findCourse(g.courseId) || {};
-        return (s.name + (c.name || '') + (g.grade || '')).toLowerCase().includes(filter.toLowerCase());
-      }) : grades);
 
-      for(const g of rows){
-        const s = findStudent(g.studentId) || { name: '—' };
-        const c = findCourse(g.courseId) || { name: '—' };
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${g.id}</td>
-          <td>${escapeHtml(s.name)}</td>
-          <td>${escapeHtml(c.name)}</td>
-          <td><span class="chip">${escapeHtml(g.grade)}</span></td>
-          <td class="actions">
-            <button class="action edit" onclick="editGrade(${g.id})">Edit</button>
-            <button class="action delete" onclick="deleteGrade(${g.id})">Delete</button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      }
-    }
-    function escapeHtml(s=''){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+    renderAll();
+  </script>
 
-    /* ---------- CRUD: Students ---------- */
-    function openModal(kind, payload){
-      document.getElementById('modalBackdrop').style.display = 'flex';
-      document.getElementById('modalBackdrop').setAttribute('aria-hidden','false');
-      document.querySelectorAll('#modalContent form').forEach(f=>f.style.display='none');
+  <script>
+    /* ================= AUTH + INIT FIX ================= */
+    const AUTH_KEY = "erp_auth";
 
-      if(kind === 'student'){
-        document.getElementById('modalTitle').textContent = payload ? 'Edit Student' : 'Add Student';
-        document.getElementById('studentForm').style.display = 'block';
-        document.getElementById('studentName').value = payload ? payload.name : '';
-        document.getElementById('studentEmail').value = payload ? payload.email : '';
-        document.getElementById('studentId').value = payload ? payload.id : '';
-      } else if(kind === 'course'){
-        document.getElementById('modalTitle').textContent = payload ? 'Edit Course' : 'Add Course';
-        document.getElementById('courseForm').style.display = 'block';
-        document.getElementById('courseName').value = payload ? payload.name : '';
-        document.getElementById('courseCode').value = payload ? payload.code : '';
-        document.getElementById('courseId').value = payload ? payload.id : '';
-      } else if(kind === 'grade'){
-        document.getElementById('modalTitle').textContent = payload ? 'Edit Grade' : 'Add Grade';
-        const studentSelect = document.getElementById('gradeStudent');
-        const courseSelect  = document.getElementById('gradeCourse');
-studentSelect.innerHTML = `
-  <option value="">Select Student</option>
-  ${students.map(s => `<option value="${s.id}">${escapeHtml(s.name)}</option>`).join('')}
-`;
-courseSelect.innerHTML = `
-  <option value="">Select Course</option>
-  ${courses.map(c => `<option value="${c.id}">${escapeHtml(c.name)}</option>`).join('')}
-`;
-
-        document.getElementById('gradeForm').style.display = 'block';
-        document.getElementById('gradeValue').value = payload ? payload.grade : '';
-        document.getElementById('gradeStudent').value = payload ? payload.studentId : '';
-        document.getElementById('gradeCourse').value = payload ? payload.courseId : '';
-        document.getElementById('gradeId').value = payload ? payload.id : '';
-      }
-    }
-    function closeModal(){ document.getElementById('modalBackdrop').style.display = 'none'; document.getElementById('modalBackdrop').setAttribute('aria-hidden','true'); }
-
-    function saveStudent(e){
+    function handleLogin(e) {
       e.preventDefault();
-      const id = document.getElementById('studentId').value;
-      const name = document.getElementById('studentName').value.trim();
-      const email = document.getElementById('studentEmail').value.trim();
-      if(!name || !email) return alert('Please provide name & email');
-      if(id){
-        const s = findStudent(Number(id)); if(s){ s.name=name; s.email=email; }
-      } else { students.push({ id: uid(students), name, email }); }
-      persistAll(); closeModal();
-    }
-    function editStudent(id){ const s=findStudent(id); if(!s) return; openModal('student', s); }
-    function deleteStudent(id){ if(!confirm('Delete this student? Grades associated will also be removed.')) return; students = students.filter(s=>s.id!==id); grades = grades.filter(g=>g.studentId!==id); persistAll(); }
 
-    /* ---------- CRUD: Courses ---------- */
-    function saveCourse(e){
-      e.preventDefault();
-      const id = document.getElementById('courseId').value;
-      const name = document.getElementById('courseName').value.trim();
-      const code = document.getElementById('courseCode').value.trim();
-      if(!name || !code) return alert('Please provide course name & code');
-      if(id){ const c = findCourse(Number(id)); if(c){ c.name=name; c.code=code; } } else { courses.push({ id: uid(courses), name, code }); }
-      persistAll(); closeModal();
-    }
-    function editCourse(id){ const c=findCourse(id); if(!c) return; openModal('course', c); }
-    function deleteCourse(id){ if(!confirm('Delete this course? Grades associated will also be removed.')) return; courses = courses.filter(c=>c.id!==id); grades = grades.filter(g=>g.courseId!==id); persistAll(); }
+      const email = document.getElementById("loginEmail").value.trim();
+      const password = document.getElementById("loginPassword").value.trim();
 
-    /* ---------- CRUD: Grades ---------- */
-    function saveGrade(e){
-      e.preventDefault();
-      const id = document.getElementById('gradeId').value;
-      const studentId = Number(document.getElementById('gradeStudent').value);
-      const courseId  = Number(document.getElementById('gradeCourse').value);
-      const gradeVal   = document.getElementById('gradeValue').value.trim();
-      if(!studentId || !courseId || !gradeVal) return alert('Please complete all fields');
-      if(id){ const g = grades.find(x=>x.id===Number(id)); if(g){ g.studentId=studentId; g.courseId=courseId; g.grade=gradeVal; } } else { grades.push({ id: uid(grades), studentId, courseId, grade: gradeVal }); }
-      persistAll(); closeModal();
-    }
-    function editGrade(id){ const g = grades.find(x=>x.id===id); if(!g) return; openModal('grade', g); }
-    function deleteGrade(id){ if(!confirm('Delete this grade?')) return; grades = grades.filter(g=>g.id!==id); persistAll(); }
-
-    /* ---------- Nav & Search ---------- */
-    function navigateSection(e){
-      const target = e.currentTarget.dataset.target;
-      document.querySelectorAll('main > section').forEach(s=>s.style.display='none');
-      document.getElementById(target).style.display = 'block';
-      document.querySelectorAll('.nav-list li').forEach(li=>li.classList.remove('active'));
-      e.currentTarget.classList.add('active');
-    }
-    function applySearch(q){ renderStudents(q); renderCourses(q); renderGrades(q); }
-
-    /* ---------- Theme ---------- */
-    function toggleTheme(){
-      const el = document.body;
-      const current = el.getAttribute('data-theme') || 'dark';
-      const next = current === 'dark' ? 'light' : 'dark';
-      el.setAttribute('data-theme', next);
-    }
-
-    /* ---------- Initialization & Auth boot ---------- */
-    function bootApp(){
-      // hide login
-      showLogin(false);
-      // render data & UI
-      refreshAll();
-      // optionally greet user
-      try{
-        const u = JSON.parse(localStorage.getItem(AUTH_KEY) || '{}');
-        if(u && u.name) console.info('Welcome,', u.name);
-      }catch(e){}
-    }
-
-    (function init(){
-      // If not logged in, show login overlay; otherwise boot app immediately.
-      if(!isLoggedIn()){
-        showLogin(true);
-      } else {
-        bootApp();
+      if (!email || !password) {
+        alert("Enter email and password");
+        return;
       }
 
-      // keyboard ESC closes modal - but not login screen
-      document.addEventListener('keydown', (e)=>{
-        if(e.key === 'Escape') {
-          const modal = document.getElementById('modalBackdrop');
-          if(modal.style.display === 'flex') closeModal();
-        }
-      });
-      // click outside modal closes it
-      document.getElementById('modalBackdrop').addEventListener('click', (e)=>{
-        if(e.target.id === 'modalBackdrop') closeModal();
-      });
+      // Demo login
+      localStorage.setItem(AUTH_KEY, "true");
+
+      // Hide login screen
+      document.getElementById("loginScreen").style.display = "none";
+    }
+
+    function logout() {
+      localStorage.removeItem(AUTH_KEY);
+      location.reload();
+    }
+
+    // INIT on page load
+    (function initAuth() {
+      const loggedIn = localStorage.getItem(AUTH_KEY);
+
+      document.getElementById("loginScreen").style.display =
+        loggedIn ? "none" : "flex";
     })();
+  </script>
 
+  <script>
+    /* ================= THEME FIX ================= */
+    const themes = ["default", "light", "ocean", "sunset"];
+    let themeIndex = 0;
+
+    function applyTheme(theme) {
+      const root = document.documentElement;
+
+      if (theme === "default") {
+        root.removeAttribute("data-theme");
+      } else {
+        root.setAttribute("data-theme", theme);
+      }
+    }
+
+    function toggleTheme() {
+      themeIndex = (themeIndex + 1) % themes.length;
+      const theme = themes[themeIndex];
+      applyTheme(theme);
+      localStorage.setItem("erp_theme", theme);
+    }
+
+    (function initTheme() {
+      const savedTheme = localStorage.getItem("erp_theme") || "default";
+      themeIndex = themes.indexOf(savedTheme);
+      if (themeIndex === -1) themeIndex = 0;
+      applyTheme(savedTheme);
+    })();
+  </script>
+
+  <script>
+    /* ================= NAV FIX ================= */
+    function switchSection(element) {
+      const target = element.dataset.section;
+
+      // Hide all sections
+      document.querySelectorAll(".section").forEach(section => {
+        section.style.display = "none";
+      });
+
+      // Show selected section
+      const activeSection = document.getElementById(target);
+      if (activeSection) {
+        activeSection.style.display = "block";
+      }
+
+      // Update active sidebar item
+      document.querySelectorAll(".nav-list li").forEach(li => {
+        li.classList.remove("active");
+      });
+
+      element.classList.add("active");
+    }
   </script>
 </body>
+
 </html>
